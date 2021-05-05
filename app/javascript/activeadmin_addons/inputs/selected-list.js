@@ -6,13 +6,6 @@ var initializer = function() {
   });
 
   function setupSelectedList(container) {
-    $('.selected-list-container').click(function(event) {
-      var item = $(event.target);
-      if (item.hasClass('selected-item')) {
-        item.remove();
-      }
-    });
-
     $('.selected-list-input', container).each(function(i, el) {
       var element = $(el);
       var url = element.data('url');
@@ -25,6 +18,7 @@ var initializer = function() {
       var responseRoot = element.data('response-root');
       var minimumInputLength = element.data('minimum-input-length');
       var order = element.data('order');
+      var allowDestroy = !!element.data('allow_destroy');
 
       var selectOptions = {
         minimumInputLength: minimumInputLength,
@@ -71,6 +65,14 @@ var initializer = function() {
       $(el).on('select2:close', onSelectClosed);
       $(el).select2(selectOptions);
 
+      $(el).find('.selected-list-container').click(function(event) {
+        var item = $(event.target);
+        var className = allowDestroy ? 'selected-item' : 'selected-item--new'
+        if (item.hasClass('selected-item')) {
+          item.remove();
+        }
+      });
+
       function onItemSelected(event) {
         var data = event.params.data;
         var selectedItemsContainer = $("[id='" + prefix + "_selected_values']");
@@ -82,7 +84,7 @@ var initializer = function() {
         }
 
         var item = $('<div>' + data.text + '</div>').attr({
-          class: 'selected-item',
+          class: 'selected-item selected-item--new',
           id: itemId,
         });
 

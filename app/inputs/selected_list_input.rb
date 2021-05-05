@@ -20,6 +20,7 @@ class SelectedListInput < ActiveAdminAddons::InputBase
       value: @options[:order_by],
       default: get_data_attr_value(:fields).first.to_s + "_desc"
     )
+    load_data_attr(:allow_destroy, default: 1)
   end
 
   private
