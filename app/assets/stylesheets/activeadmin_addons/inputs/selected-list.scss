@@ -13,7 +13,7 @@ $selected-list-btn-hover-color: #333;
 .selected-item {
   display: table;
 
-  .selected-list-container--allow-destroy &, .selected-item--new {
+  .selected-list-container--allow-destroy &, &.selected-item--new {
     cursor: pointer;
 
     &::before {
