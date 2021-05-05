@@ -26,7 +26,6 @@ class SelectedListInput < ActiveAdminAddons::InputBase
   private
 
   def render_control_wrapper
-    p wrapper_class_name
     template.content_tag(:div, class: wrapper_class_name) do
       template.content_tag(label_html)
       template.concat(render_items_list)
@@ -56,7 +55,7 @@ class SelectedListInput < ActiveAdminAddons::InputBase
 
   def wrapper_class_name
     class_name = "selected-list-container"
-    return class_name if !data_attr_options[:allow_destroy]
+    return class_name unless data_attr_options[:allow_destroy][:value]
     "#{class_name} #{class_name}--allow-destroy"
   end
 end
