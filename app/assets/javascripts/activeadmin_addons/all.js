@@ -163,16 +163,16 @@
       });
     };
   })(jQuery);
-  var initializer = function() {
+  var initializer$9 = function() {
     window.ActiveadminAddons = {
       config: {
         defaultSelect: $("body").data("default-select")
       }
     };
   };
-  $(initializer);
-  $(document).on("turbolinks:load", initializer);
-  var initializer$1 = function() {
+  $(initializer$9);
+  $(document).on("turbolinks:load", initializer$9);
+  var initializer$8 = function() {
     configureSelect2(document);
     $(document).on("has_many_add:after", function(event, container) {
       configureSelect2(container);
@@ -212,9 +212,9 @@
       }
     }
   };
-  $(initializer$1);
-  $(document).on("turbolinks:load", initializer$1);
-  var initializer$2 = function() {
+  $(initializer$8);
+  $(document).on("turbolinks:load", initializer$8);
+  var initializer$7 = function() {
     setupSearchSelect(document);
     $(document).on("has_many_add:after", function(event, container) {
       setupSearchSelect(container);
@@ -282,8 +282,8 @@
       });
     }
   };
-  $(initializer$2);
-  $(document).on("turbolinks:load", initializer$2);
+  $(initializer$7);
+  $(document).on("turbolinks:load", initializer$7);
   $.fn.select2.amd.define("select2/data/nestedCustomAdapter", [ "select2/data/array", "select2/utils" ], function(ArrayData, Utils) {
     function CustomData($element, options) {
       CustomData.__super__.constructor.call(this, $element, options);
@@ -330,7 +330,7 @@
     };
     return CustomData;
   });
-  var initializer$3 = function() {
+  var initializer$6 = function() {
     configureSelect2(document);
     $(document).on("has_many_add:after", function(event, container) {
       configureSelect2(container);
@@ -428,9 +428,9 @@
       });
     }
   };
-  $(initializer$3);
-  $(document).on("turbolinks:load", initializer$3);
-  var initializer$4 = function() {
+  $(initializer$6);
+  $(document).on("turbolinks:load", initializer$6);
+  var initializer$5 = function() {
     setupTags(document);
     $(document).on("has_many_add:after", function(event, container) {
       setupTags(container);
@@ -494,22 +494,17 @@
       });
     }
   };
-  $(initializer$4);
-  $(document).on("turbolinks:load", initializer$4);
-  var initializer$5 = function() {
+  $(initializer$5);
+  $(document).on("turbolinks:load", initializer$5);
+  var initializer$4 = function() {
     setupSelectedList(document);
     $(document).on("has_many_add:after", function(event, container) {
       setupSelectedList(container);
     });
     function setupSelectedList(container) {
-      $(".selected-list-container").click(function(event) {
-        var item = $(event.target);
-        if (item.hasClass("selected-item")) {
-          item.remove();
-        }
-      });
       $(".selected-list-input", container).each(function(i, el) {
         var element = $(el);
+        var containerElement = element.closest(".selected-list-container");
         var url = element.data("url");
         var fields = element.data("fields");
         var predicate = element.data("predicate");
@@ -520,6 +515,15 @@
         var responseRoot = element.data("response-root");
         var minimumInputLength = element.data("minimum-input-length");
         var order = element.data("order");
+        var allowDestroy = !!element.data("allow_destroy");
+        var itemName = model + "[" + method + "][]";
+        var selectedIds = function() {
+          return $('input[name="' + itemName + '"]').map(function(_, input) {
+            return input.value.toString();
+          }).toArray().filter(function(v) {
+            return v;
+          });
+        };
         var selectOptions = {
           minimumInputLength: minimumInputLength,
           allowClear: true,
@@ -548,30 +552,38 @@
               if (data.constructor == Object) {
                 data = data[responseRoot];
               }
+              var ids = selectedIds();
               return {
                 results: jQuery.map(data, function(resource) {
                   return {
                     id: resource.id,
-                    text: resource[displayName].toString()
+                    text: resource[displayName].toString(),
+                    disabled: ids.includes(resource.id.toString())
                   };
                 })
               };
             }
           }
         };
-        $(el).on("select2:select", onItemSelected);
-        $(el).on("select2:close", onSelectClosed);
-        $(el).select2(selectOptions);
+        element.on("select2:select", onItemSelected);
+        element.on("select2:close", onSelectClosed);
+        element.select2(selectOptions);
+        containerElement.click(function(event) {
+          var item = $(event.target);
+          var className = allowDestroy ? "selected-item" : "selected-item--new";
+          if (item.hasClass(className)) {
+            item.remove();
+          }
+        });
         function onItemSelected(event) {
           var data = event.params.data;
           var selectedItemsContainer = $("[id='" + prefix + "_selected_values']");
-          var itemName = model + "[" + method + "][]";
           var itemId = prefix + "_" + data.id;
           if ($("#" + itemId).length > 0) {
             return;
           }
           var item = $("<div>" + data.text + "</div>").attr({
-            class: "selected-item",
+            class: "selected-item selected-item--new",
             id: itemId
           });
           var hiddenInput = $("<input>").attr({
@@ -588,9 +600,9 @@
       });
     }
   };
-  $(initializer$5);
-  $(document).on("turbolinks:load", initializer$5);
-  var initializer$6 = function() {
+  $(initializer$4);
+  $(document).on("turbolinks:load", initializer$4);
+  var initializer$3 = function() {
     setupDateTimePicker(document);
     $(document).on("has_many_add:after", ".has_many_container", function(event, fieldset) {
       return setupDateTimePicker(fieldset);
@@ -612,9 +624,9 @@
       });
     }
   };
-  $(initializer$6);
-  $(document).on("turbolinks:load", initializer$6);
-  var initializer$7 = function() {
+  $(initializer$3);
+  $(document).on("turbolinks:load", initializer$3);
+  var initializer$2 = function() {
     setupColorPicker();
     $(document).on("has_many_add:after", setupColorPicker);
     function setupColorPicker() {
@@ -625,9 +637,9 @@
       });
     }
   };
-  $(initializer$7);
-  $(document).on("turbolinks:load", initializer$7);
-  var initializer$8 = function() {
+  $(initializer$2);
+  $(document).on("turbolinks:load", initializer$2);
+  var initializer$1 = function() {
     $(".toggle-bool-switch").click(function(e) {
       var boolSwitch = $(e.target);
       var objectId = boolSwitch.data("object_id");
@@ -664,9 +676,9 @@
       });
     });
   };
-  $(initializer$8);
-  $(document).on("turbolinks:load", initializer$8);
-  var initializer$9 = function() {
+  $(initializer$1);
+  $(document).on("turbolinks:load", initializer$1);
+  var initializer = function() {
     configureInteractiveSelect(document);
     $(document).on("has_many_add:after", function(event, container) {
       configureInteractiveSelect(container);
@@ -748,6 +760,6 @@
       }
     });
   };
-  $(initializer$9);
-  $(document).on("turbolinks:load", initializer$9);
+  $(initializer);
+  $(document).on("turbolinks:load", initializer);
 });
