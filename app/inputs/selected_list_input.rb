@@ -20,13 +20,14 @@ class SelectedListInput < ActiveAdminAddons::InputBase
       value: @options[:order_by],
       default: get_data_attr_value(:fields).first.to_s + "_desc"
     )
-    load_data_attr(:allow_destroy, default: 1)
+    load_data_attr(:allow_destroy, default: true)
   end
 
   private
 
   def render_control_wrapper
-    template.content_tag(:div, class: "selected-list-container") do
+    p wrapper_class_name
+    template.content_tag(:div, class: wrapper_class_name) do
       template.content_tag(label_html)
       template.concat(render_items_list)
       template.concat(builder.select(build_virtual_attr, [], {}, input_html_options))
@@ -51,5 +52,11 @@ class SelectedListInput < ActiveAdminAddons::InputBase
 
   def item_label(item)
     item.send(@options[:display_name] || "name")
+  end
+
+  def wrapper_class_name
+    class_name = "selected-list-container"
+    return class_name if !data_attr_options[:allow_destroy]
+    "#{class_name} #{class_name}--allow-destroy"
   end
 end

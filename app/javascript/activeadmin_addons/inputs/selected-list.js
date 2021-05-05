@@ -68,7 +68,7 @@ var initializer = function() {
       $(el).find('.selected-list-container').click(function(event) {
         var item = $(event.target);
         var className = allowDestroy ? 'selected-item' : 'selected-item--new'
-        if (item.hasClass('selected-item')) {
+        if (item.hasClass(className)) {
           item.remove();
         }
       });
